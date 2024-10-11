@@ -10,7 +10,7 @@ Flask==3.0.3
 Flask-Login==0.6.3
 Flask-session==0.8.0
 Flask-WTF==1.2.1
-gunicorn
+gunicorn==23.0.0
 more-itertools==10.3.0
 numpy==1.26.4
 orca==1.8
