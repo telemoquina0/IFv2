@@ -136,7 +136,8 @@ def logout():
 
 # Updating the Flask Server configuration with Secret Key to encrypt the user session cookie
 os.chdir(os.path.dirname(os.path.abspath(__file__))) #Hay que poner el directorio donde se encuentra main 
-server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
+#server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
+server.config.update(SECRET_KEY='7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe')
 server.config['SESSION_TYPE'] = 'filesystem' 
 Session(server)
 
