@@ -164,7 +164,8 @@ require_login('pages.resultado')
 require_login('pages.diff_despesques')
 
 p=funcsif()
-p.crear_carpetas()
+#p.crear_carpetas()
+p.generacion()
 
 if __name__ == "__main__":
     #app.run(debug=True)
