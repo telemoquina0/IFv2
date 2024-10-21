@@ -1,8 +1,8 @@
 version: '3.12'
 
 services:
-  IFv2:
-    image: IFv2
+  msdocspythoncontainerwebapp:
+    image: msdocspythoncontainerwebapp
     build:
       context: .
       dockerfile: ./Dockerfile
