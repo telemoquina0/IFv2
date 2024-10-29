@@ -715,23 +715,24 @@ def ejecutar(submit_n_clicks, default_flag, fecha, meses_sim, granjas,panel, tri
                 all_edad_venta_df =p.import_format_func(path = p.get_attr("path_df_edad_pescas"), val_name = "Edad")
                 all_reparto_mort = p.import_format_mort_dist()
                 resultado=p.import_initial_data(continue_flag = default_flag,fecha = fecha)
-                culling_edad = pd.read_csv(p.get_attr("path_default_culling_por"))["Edad"].to_list()[0]
-                culling_por = pd.read_csv(p.get_attr("path_default_culling_por"))["Por"].to_list()[0]
-                df_growth_type = pd.read_csv(p.get_attr("path_d_growth_type"))
-                df_growth_type= df_growth_type.loc[df_growth_type['Button'] == "d_growth_type", "State"].values.item(0)
-                validation = True
-                my_txt = "La Fecha de inicio de ajuste debe ser menor a la final"
-                if (isinstance(all_ajustes_edad,str) or isinstance(all_ajustes_talla,str) or isinstance(all_ajustes_gen,str)):
-                    #si alguno de los 3 es una cadena significa que se ha devuelto Error Fechas
-                    validation = False
-                    return ["Error en fechas. Ajustes de crecimiento: "+my_txt, default_campos_granjas.to_list(), default_campos_granjas.to_list()[0],\
-                             panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso') ]
-                if isinstance(all_ajustes_mort_gen,str):
-                    #significa que se ha devuelto Error Fechas
-                    validation = False
-                    return ["Error en fechas. Ajustes de mortalidad: "+my_txt, default_campos_granjas.to_list(), default_campos_granjas.to_list()[0], \
-                            panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso')]
-                if validation:
+                if not resultado is None:
+                    culling_edad = pd.read_csv(p.get_attr("path_default_culling_por"))["Edad"].to_list()[0]
+                    culling_por = pd.read_csv(p.get_attr("path_default_culling_por"))["Por"].to_list()[0]
+                    df_growth_type = pd.read_csv(p.get_attr("path_d_growth_type"))
+                    df_growth_type= df_growth_type.loc[df_growth_type['Button'] == "d_growth_type", "State"].values.item(0)
+                    validation = True
+                    my_txt = "La Fecha de inicio de ajuste debe ser menor a la final"
+                    if (isinstance(all_ajustes_edad,str) or isinstance(all_ajustes_talla,str) or isinstance(all_ajustes_gen,str)):
+                        #si alguno de los 3 es una cadena significa que se ha devuelto Error Fechas
+                        validation = False
+                        return ["Error en fechas. Ajustes de crecimiento: "+my_txt, default_campos_granjas.to_list(), default_campos_granjas.to_list()[0],\
+                                 panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso') ]
+                    if isinstance(all_ajustes_mort_gen,str):
+                        #significa que se ha devuelto Error Fechas
+                        validation = False
+                        return ["Error en fechas. Ajustes de mortalidad: "+my_txt, default_campos_granjas.to_list(), default_campos_granjas.to_list()[0], \
+                                panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso')]
+                    if validation:
                         for loop in range(1,(meses_sim+1)) :
                             mes_loop = pd.to_datetime(resultado['FechaFin'].unique()[0]).month
                             ano_loop = pd.to_datetime(resultado['FechaFin'].unique()[0]).year
@@ -761,6 +762,10 @@ def ejecutar(submit_n_clicks, default_flag, fecha, meses_sim, granjas,panel, tri
                         escribir_log('info', dame_sesion()+": Resultado guardado")
                         return ["Fin", default_campos_granjas.to_list(), default_campos_granjas.to_list()[0],\
                                  panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso')]
+                else:
+                    escribir_log('info', dame_sesion()+": la base de datos no devuelve datos")
+                    return ["No hay datos en la base de datos", default_campos_granjas.to_list(), default_campos_granjas.to_list()[0],\
+                            panel,'Distribucion_M_S','ajustes_growth',update_tablas_trigger.to_json(orient='split', date_format='iso')]
                 #return [no_update, default_campos_granjas.to_list(), default_campos_granjas.tolist()[0], default_campos_granjas.tolist(), default_campos_granjas.tolist()[0]]
     except Exception as e:
         escribir_log('critical', dame_sesion()+': ejecutar ' +"Error {0}".format(str(e)))
